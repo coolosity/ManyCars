@@ -85,68 +85,72 @@ public class ManyCarsMain implements KeyListener, MouseListener, MouseMotionList
 	{
 		running = true;
 		showUnderscore = false;
+		long lastDraw = 0, lastTick = 0;
 		while(running)
 		{
-			long start = System.currentTimeMillis();
-			game.tick();
-			BufferedImage img = gameDisplay.getCanvas();
-			Graphics g = img.getGraphics();
-			g.setColor(Color.GREEN);
-			g.fillRect(0, 0, img.getWidth(), img.getHeight());
-			
-			
-			if(numCars>1)
-				game.draw(img);
-			else
-				game.draw(img.getSubimage(img.getWidth()/4, 0, img.getWidth()/2, img.getHeight()));
-			
-			if(game.isDead())
+			if(System.currentTimeMillis()-lastTick>=1000/60)
 			{
-				
-				Font name = new Font("Arial",Font.PLAIN,32);
-				FontMetrics fm = g.getFontMetrics(name);
-				g.setFont(name);
-
-				int they = fm.getHeight()+10;
-				
-				g.setColor(new Color(153, 77, 0));
-				g.fillRect(0, they-fm.getHeight()+7, img.getWidth(), fm.getHeight());
-				
-				int thex = (img.getWidth()-fm.stringWidth(username))/2;
-				
-				g.setColor(Color.YELLOW);
-				g.drawString(username, thex, they);
-				thex += fm.stringWidth(username);
-				
-				if(System.currentTimeMillis()>=nextUnderscoreChange)
-				{
-					nextUnderscoreChange = System.currentTimeMillis()+1000/3;
-					showUnderscore = !showUnderscore;
-				}
-				
-				if(showUnderscore)
-				{
-					g.drawString("|", thex, they);
-				}
-				
-				int numlines = 2;
-				int ybor = 25;
-				int height = fm.getHeight()*numlines+ybor*2;
-				g.setColor(Color.CYAN);
-				g.fillRect(0, (img.getHeight()-height)/2, img.getWidth(), height);
-				int cury = img.getHeight()/2-height/2+fm.getHeight()+ybor-5;
-				String txt = "SPACE to restart";
-				g.setColor(Color.BLACK);
-				g.drawString(txt, (img.getWidth()-fm.stringWidth(txt))/2, cury);
-				cury += fm.getHeight();
-				txt = "ESC to exit";
-				g.drawString(txt, (img.getWidth()-fm.stringWidth(txt))/2, cury);
-				cury += fm.getHeight();
+				lastTick = System.currentTimeMillis();
+				game.tick();
 			}
-			
-			gameDisplay.draw(img);
-			
-			while(System.currentTimeMillis()-start<1000/60);
+			if(System.currentTimeMillis()-lastDraw>=0)
+			{
+				lastDraw = System.currentTimeMillis();
+				BufferedImage img = gameDisplay.getCanvas();
+				Graphics g = img.getGraphics();
+				g.setColor(Color.GREEN);
+				g.fillRect(0, 0, img.getWidth(), img.getHeight());
+				
+				if(numCars>1)
+					game.draw(img);
+				else
+					game.draw(img.getSubimage(img.getWidth()/4, 0, img.getWidth()/2, img.getHeight()));
+				
+				if(game.isDead())
+				{
+					Font name = new Font("Arial",Font.PLAIN,32);
+					FontMetrics fm = g.getFontMetrics(name);
+					g.setFont(name);
+
+					int they = fm.getHeight()+10;
+					
+					g.setColor(new Color(153, 77, 0));
+					g.fillRect(0, they-fm.getHeight()+7, img.getWidth(), fm.getHeight());
+					
+					int thex = (img.getWidth()-fm.stringWidth(username))/2;
+					
+					g.setColor(Color.YELLOW);
+					g.drawString(username, thex, they);
+					thex += fm.stringWidth(username);
+					
+					if(System.currentTimeMillis()>=nextUnderscoreChange)
+					{
+						nextUnderscoreChange = System.currentTimeMillis()+1000/3;
+						showUnderscore = !showUnderscore;
+					}
+					
+					if(showUnderscore)
+					{
+						g.drawString("|", thex, they);
+					}
+					
+					int numlines = 2;
+					int ybor = 25;
+					int height = fm.getHeight()*numlines+ybor*2;
+					g.setColor(Color.CYAN);
+					g.fillRect(0, (img.getHeight()-height)/2, img.getWidth(), height);
+					int cury = img.getHeight()/2-height/2+fm.getHeight()+ybor-5;
+					String txt = "SPACE to restart";
+					g.setColor(Color.BLACK);
+					g.drawString(txt, (img.getWidth()-fm.stringWidth(txt))/2, cury);
+					cury += fm.getHeight();
+					txt = "ESC to exit";
+					g.drawString(txt, (img.getWidth()-fm.stringWidth(txt))/2, cury);
+					cury += fm.getHeight();
+				}
+				
+				gameDisplay.draw(img);
+			}
 		}
 		
 		JFrame mf = gameDisplay.getFrame();

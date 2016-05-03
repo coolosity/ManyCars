@@ -26,11 +26,9 @@ public class Game
 		Random random = new Random();
 		columns = new ArrayList<Column>();
 		int curCol = 0;
-		Color a = Color.BLACK;
-		Color b = new Color(50,50,50);
 		for(int i=0;i<numCars;i++)
 		{
-			columns.add(new Column(random,colors[curCol++],i%2==0?a:b));
+			columns.add(new Column(random,colors[curCol++]));
 			if(curCol>=colors.length)curCol = 0;
 		}
 	}

@@ -23,7 +23,6 @@ public abstract class Menu
 	
 	public abstract void mousePressed();
 	
-
 	protected boolean drawButton(BufferedImage img, int x, int y, int w, int h, Font font, String txt, int mx, int my)
 	{
 		return drawButton(img,x,y,w,h,font,txt,mx,my,0);
@@ -49,6 +48,14 @@ public abstract class Menu
 		FontMetrics fm = g.getFontMetrics(font);
 		g.drawString(txt, x+(w-fm.stringWidth(txt))/2, y+h/2+fm.getHeight()/3+yoffset);
 		
+		return hover;
+	}
+	
+	protected boolean drawButton(BufferedImage img, int x, int y, int w, int h, BufferedImage off, BufferedImage on, int mx, int my)
+	{
+		boolean hover = (mx>=x && my>=y && mx<x+w && my<y+h);
+		Graphics g = img.getGraphics();
+		g.drawImage(hover?on:off, x, y, w, h, null);
 		return hover;
 	}
 }

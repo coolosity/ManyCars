@@ -26,13 +26,13 @@ public class Column
 	private int carCol;
 	private double nextSpawn;
 	private BufferedImage boat;
-	private Color bgColor;
 	private double carOffset;
 	private double objHeight = 0.05;
 	private double carHeight = 0.1;
 	private boolean dead;
+	private double oceanOffset;
 	
-	public Column(Random random, Color color, Color bgColor)
+	public Column(Random random, Color color)
 	{
 		this.random = random;
 		
@@ -49,7 +49,6 @@ public class Column
 			}
 		}
 		
-		this.bgColor = bgColor;
 		objects = new ArrayList<MyObject>();
 		newSpawn();
 	}
@@ -68,8 +67,16 @@ public class Column
 		Graphics g = img.getGraphics();
 		
 		//Background
-		g.setColor(bgColor);
-		g.fillRect(0, 0, img.getWidth(), img.getHeight());
+		BufferedImage ocean = Resources.getImage("ocean");
+		int ohei = ocean.getHeight()*img.getWidth()/ocean.getWidth();
+		double reset = ohei*1.0/img.getHeight();
+		while(oceanOffset>=reset)oceanOffset -= reset;
+		int cury = (int)(img.getHeight()*oceanOffset)-ohei;
+		while(cury<img.getHeight())
+		{
+			g.drawImage(ocean, 0, cury, img.getWidth(), ohei, null);
+			cury += ohei;
+		}
 		
 		//Center line
 		g.setColor(Color.WHITE);
@@ -96,6 +103,7 @@ public class Column
 	
 	public void tick(double modifier)
 	{
+		oceanOffset += objectSpeed*modifier;
 		for(int i=objects.size()-1;i>=0;i--)
 		{
 			MyObject obj = objects.get(i);
