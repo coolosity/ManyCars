@@ -18,7 +18,7 @@ public class Game
 	
 	private ArrayList<Column> columns;
 	private boolean scoreSaved;
-	private int score;
+	private double score;
 	private double modifier;
 	
 	public Game(int numCars)
@@ -65,10 +65,10 @@ public class Game
 		/*int sum = 0;
 		for(Column c : columns)sum += c.getScore();
 		return sum;*/
-		return score/100;
+		return (int)(score)/100;
 	}
 	
-	public void tick()
+	public void tick(double delta)
 	{
 		if(isDead())return;
 		
@@ -77,8 +77,8 @@ public class Game
 		
 		modifier = start+(end-start)/(Math.pow(1+1.6*Math.pow(Math.E, -1.3 * score/680), 10));
 		
-		for(Column c : columns)c.tick(modifier);
-		score++;
+		for(Column c : columns)c.tick(modifier, delta);
+		score+=delta;
 	}
 	
 	public void moveColumn(int col)

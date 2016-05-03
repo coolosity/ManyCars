@@ -85,14 +85,12 @@ public class ManyCarsMain implements KeyListener, MouseListener, MouseMotionList
 	{
 		running = true;
 		showUnderscore = false;
-		long lastDraw = 0, lastTick = 0;
+		long lastDraw = 0, lastTick = System.currentTimeMillis();
 		while(running)
 		{
-			if(System.currentTimeMillis()-lastTick>=1000/60)
-			{
-				lastTick = System.currentTimeMillis();
-				game.tick();
-			}
+			long ct = System.currentTimeMillis()-lastTick;
+			lastTick = System.currentTimeMillis();
+			game.tick(ct*1.0/(1000/60));
 			if(System.currentTimeMillis()-lastDraw>=0)
 			{
 				lastDraw = System.currentTimeMillis();

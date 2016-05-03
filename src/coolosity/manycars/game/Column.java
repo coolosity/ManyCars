@@ -101,13 +101,13 @@ public class Column
 		}
 	}
 	
-	public void tick(double modifier)
+	public void tick(double modifier, double delta)
 	{
-		oceanOffset += objectSpeed*modifier;
+		oceanOffset += objectSpeed*modifier*delta;
 		for(int i=objects.size()-1;i>=0;i--)
 		{
 			MyObject obj = objects.get(i);
-			obj.setYLoc(obj.getYLoc()+objectSpeed*modifier);
+			obj.setYLoc(obj.getYLoc()+objectSpeed*modifier*delta);
 			
 			boolean rm = false;
 			if(obj.getCol()==carCol)
@@ -137,7 +137,7 @@ public class Column
 			}
 		}
 		
-		nextSpawn -= 1.0*modifier;
+		nextSpawn -= 1.0*modifier*delta;
 		if(nextSpawn<=0)
 		{
 			objects.add(new MyObject(random.nextInt(2),random.nextInt(2),0));
@@ -146,7 +146,7 @@ public class Column
 		
 		if(Math.abs(carOffset)>0.0001)
 		{
-			double d = Math.abs(carOffset)/carOffset*offsetPerTick;
+			double d = Math.abs(carOffset)/carOffset*offsetPerTick*delta;
 			if(Math.abs(d)>Math.abs(carOffset))
 				d = carOffset;
 			carOffset -= d;
